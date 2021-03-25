@@ -5,7 +5,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public interface EntityBaseRepository<T extends EntityBase> extends JpaRepository<T, UUID>, QuerydslPredicateExecutor<T> {
 
@@ -14,5 +17,17 @@ public interface EntityBaseRepository<T extends EntityBase> extends JpaRepositor
         return Objects.isNull(predicate)
                 ? findAll(pageable)
                 : findAll(predicate, pageable);
+    }
+
+    default List<T> findAll(Filter filter) {
+        var predicate = filter.toPredicate();
+        if (Objects.isNull(predicate)) {
+            return findAll();
+        }
+
+        var itterable = findAll(predicate);
+        List<T> result = new ArrayList<>();
+        itterable.forEach(result::add);
+        return result;
     }
 }

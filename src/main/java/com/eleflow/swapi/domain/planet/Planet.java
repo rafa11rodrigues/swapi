@@ -1,4 +1,4 @@
-package com.eleflow.swapi.domain;
+package com.eleflow.swapi.domain.planet;
 
 import com.eleflow.swapi.infrastructure.domain.EntityBase;
 
@@ -21,7 +21,7 @@ public class Planet extends EntityBase {
     private String terrain;
 
     @Column(name = "POPULATION", nullable = false)
-    private Integer population;
+    private String population;
 
 
     protected Planet() {}
@@ -42,7 +42,7 @@ public class Planet extends EntityBase {
         return terrain;
     }
 
-    public Integer getPopulation() {
+    public String getPopulation() {
         return population;
     }
 
@@ -99,7 +99,7 @@ public class Planet extends EntityBase {
         }
 
         @Override
-        public PlanetBuilder population(Integer population) {
+        public PlanetBuilder population(String population) {
             this.planet.population = population;
             return this;
         }
@@ -123,7 +123,7 @@ public class Planet extends EntityBase {
     }
 
     public static interface PlanetPopulation {
-        PlanetBuilder population(Integer population);
+        PlanetBuilder population(String population);
     }
 
     public static interface PlanetBuilder {

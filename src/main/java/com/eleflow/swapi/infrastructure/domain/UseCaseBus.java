@@ -20,19 +20,24 @@ public class UseCaseBus {
 
 
     public <T extends Command<R>, R> R execute(T command) {
-        var returnType = (Class<R>)
-                ((ParameterizedType) (command.getClass().getGenericInterfaces()[0]))
-                        .getActualTypeArguments()[0];
-
-        String[] beanNames = applicationContext.getBeanNamesForType(
-                ResolvableType.forClassWithGenerics(UseCase.class, command.getClass(), returnType)
-        );
-
-        if (beanNames.length == 0) {
+        final UseCase<T, R> useCase = getUseCaseForCommand(command.getClass());
+        if (useCase == null) {
             throw new ServerException(NO_HANDLER_DEFINED);
         }
-
-        UseCase<T, R> useCase = (UseCase<T, R>) applicationContext.getBean(beanNames[0]);
         return useCase.execute(command);
+    }
+
+    private <T extends Command<R>, R> UseCase<T, R> getUseCaseForCommand(Class<T> commandClass) {
+        UseCase<T, R> useCase = null;
+
+        var beans = applicationContext.getBeansOfType(UseCase.class);
+        for (var name: beans.keySet()) {
+            var bean = beans.get(name);
+            var beanCommandType = ((ParameterizedType) bean.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[0];
+            if (beanCommandType.equals(commandClass)) {
+                useCase = (UseCase<T, R>) bean;
+            }
+        }
+        return useCase;
     }
 }

@@ -1,8 +1,8 @@
-package com.eleflow.swapi.domain.usecase;
+package com.eleflow.swapi.domain.planet.usecase;
 
-import com.eleflow.swapi.domain.Planet;
-import com.eleflow.swapi.domain.PlanetDTO;
-import com.eleflow.swapi.domain.command.FindPlanetByIdCommand;
+import com.eleflow.swapi.domain.planet.Planet;
+import com.eleflow.swapi.domain.planet.PlanetDTO;
+import com.eleflow.swapi.domain.planet.command.FindPlanetByIdCommand;
 import com.eleflow.swapi.infrastructure.domain.UseCase;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +15,7 @@ public class FindPlanetById implements UseCase<FindPlanetByIdCommand, PlanetDTO>
                 .name("Foo")
                 .climate("árido")
                 .terrain("terreno")
-                .population(12)
+                .population("12")
                 .build();
         return PlanetDTO.of(planet);
     }

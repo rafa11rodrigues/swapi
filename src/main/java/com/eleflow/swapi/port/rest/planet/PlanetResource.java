@@ -1,17 +1,21 @@
 package com.eleflow.swapi.port.rest.planet;
 
-import com.eleflow.swapi.domain.PlanetDTO;
-import com.eleflow.swapi.domain.command.AddPlanetCommand;
-import com.eleflow.swapi.domain.command.FindPlanetByIdCommand;
-import com.eleflow.swapi.domain.command.GetFromSWApiCommand;
+import com.eleflow.swapi.domain.planet.PlanetDTO;
+import com.eleflow.swapi.domain.planet.PlanetFilter;
+import com.eleflow.swapi.domain.planet.command.AddPlanetCommand;
+import com.eleflow.swapi.domain.planet.command.FilterPlanetsCommand;
+import com.eleflow.swapi.domain.planet.command.FindPlanetByIdCommand;
 import com.eleflow.swapi.infrastructure.domain.UseCaseBus;
 import com.eleflow.swapi.port.rest.planet.request.AddPlanetRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
+@Transactional
 @RestController
 @RequestMapping("/planets")
 public class PlanetResource {
@@ -40,8 +44,9 @@ public class PlanetResource {
         return useCaseBus.execute(command);
     }
 
-    @GetMapping("/sw")
-    public String getFromSwApi() {
-        return useCaseBus.execute(new GetFromSWApiCommand());
+    @GetMapping
+    public List<PlanetDTO> filter(@RequestParam(required = false) String name) {
+        var filter = new PlanetFilter(name);
+        return useCaseBus.execute(new FilterPlanetsCommand(filter));
     }
 }

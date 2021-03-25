@@ -1,4 +1,4 @@
-package com.eleflow.swapi.domain;
+package com.eleflow.swapi.domain.planet;
 
 import java.util.UUID;
 
@@ -8,7 +8,7 @@ public class PlanetDTO {
     private String name;
     private String climate;
     private String terrain;
-    private Integer population;
+    private String population;
 
 
     private PlanetDTO() {}
@@ -40,7 +40,19 @@ public class PlanetDTO {
         return terrain;
     }
 
-    public Integer getPopulation() {
+    public String getPopulation() {
         return population;
+    }
+
+
+    @Override
+    public String toString() {
+        return "PlanetDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", climate='" + climate + '\'' +
+                ", terrain='" + terrain + '\'' +
+                ", population='" + population + '\'' +
+                '}';
     }
 }

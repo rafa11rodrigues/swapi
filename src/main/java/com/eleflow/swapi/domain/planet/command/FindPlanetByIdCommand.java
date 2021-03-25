@@ -1,6 +1,6 @@
-package com.eleflow.swapi.domain.command;
+package com.eleflow.swapi.domain.planet.command;
 
-import com.eleflow.swapi.domain.PlanetDTO;
+import com.eleflow.swapi.domain.planet.PlanetDTO;
 import com.eleflow.swapi.infrastructure.domain.Command;
 
 import java.util.UUID;
