@@ -5,11 +5,11 @@ import com.eleflow.swapi.infrastructure.domain.Command;
 
 import java.util.UUID;
 
-public class FindPlanetByIdCommand implements Command<PlanetDTO> {
+public class GetPlanetByIdCommand implements Command<PlanetDTO> {
 
     private final UUID id;
 
-    public FindPlanetByIdCommand(UUID id) {
+    public GetPlanetByIdCommand(UUID id) {
         this.id = id;
     }
 

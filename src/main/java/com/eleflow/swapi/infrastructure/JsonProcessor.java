@@ -17,6 +17,13 @@ public class JsonProcessor {
             .registerModule(new JavaTimeModule())
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
 
+    public static String toJson(Object object) {
+        try {
+            return MAPPER.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            throw new ServerException(JSON_NOT_OBJECT_ERROR, object);
+        }
+    }
 
     public static <T> Object parse(String value, Class<T> type) {
         JsonNode tree = parseAsTree(value);

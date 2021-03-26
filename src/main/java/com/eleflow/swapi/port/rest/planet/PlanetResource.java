@@ -3,8 +3,9 @@ package com.eleflow.swapi.port.rest.planet;
 import com.eleflow.swapi.domain.planet.PlanetDTO;
 import com.eleflow.swapi.domain.planet.PlanetFilter;
 import com.eleflow.swapi.domain.planet.command.AddPlanetCommand;
+import com.eleflow.swapi.domain.planet.command.DeletePlanetCommand;
 import com.eleflow.swapi.domain.planet.command.FilterPlanetsCommand;
-import com.eleflow.swapi.domain.planet.command.FindPlanetByIdCommand;
+import com.eleflow.swapi.domain.planet.command.GetPlanetByIdCommand;
 import com.eleflow.swapi.infrastructure.domain.UseCaseBus;
 import com.eleflow.swapi.port.rest.planet.request.AddPlanetRequest;
 import org.springframework.http.HttpStatus;
@@ -28,8 +29,8 @@ public class PlanetResource {
 
 
     @GetMapping("/{id}")
-    public PlanetDTO findById(@PathVariable UUID id) {
-        var command = new FindPlanetByIdCommand(id);
+    public PlanetDTO getById(@PathVariable UUID id) {
+        var command = new GetPlanetByIdCommand(id);
         return useCaseBus.execute(command);
     }
 
@@ -48,5 +49,11 @@ public class PlanetResource {
     public List<PlanetDTO> filter(@RequestParam(required = false) String name) {
         var filter = new PlanetFilter(name);
         return useCaseBus.execute(new FilterPlanetsCommand(filter));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deletePlanet(@PathVariable UUID id) {
+        useCaseBus.execute(new DeletePlanetCommand(id));
     }
 }

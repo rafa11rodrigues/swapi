@@ -4,6 +4,7 @@ import com.eleflow.swapi.domain.planet.Planet;
 import com.eleflow.swapi.domain.planet.PlanetDTO;
 import com.eleflow.swapi.domain.planet.command.AddPlanetCommand;
 import com.eleflow.swapi.domain.planet.repository.PlanetRepository;
+import com.eleflow.swapi.domain.swplanet.SWPlanet;
 import com.eleflow.swapi.domain.swplanet.service.SWApiService;
 import com.eleflow.swapi.infrastructure.domain.UseCase;
 import com.eleflow.swapi.infrastructure.exception.BusinessException;
@@ -26,12 +27,13 @@ public class AddPlanet implements UseCase<AddPlanetCommand, PlanetDTO> {
 
     @Override
     public PlanetDTO execute(AddPlanetCommand command) {
-        var population = getPlanetPopulation(command.getName());
-        var planet = buildAndSave(command, population);
+        var swPlanet = getMatchingSWPlanet(command.getName());
+        checkPlanetNameMatch(command.getName(), swPlanet.getName());
+        var planet = buildAndSave(command, swPlanet.getPopulation());
         return PlanetDTO.of(planet);
     }
 
-    private String getPlanetPopulation(String planetName) {
+    private SWPlanet getMatchingSWPlanet(String planetName) {
         var swPlanets = swApiService.getByName(planetName);
         if (swPlanets.getCount() == 0) {
             throw new BusinessException(PLANET_NOT_FOUND_BY_NAME, planetName);
@@ -40,8 +42,13 @@ public class AddPlanet implements UseCase<AddPlanetCommand, PlanetDTO> {
             throw new BusinessException(PLANET_MULTIPLE_WITH_NAME, planetName);
         }
         return swPlanets.getResults()
-                .get(0)
-                .getPopulation();
+                .get(0);
+    }
+
+    private void checkPlanetNameMatch(String planetName, String swPlanetName) {
+        if (!planetName.equalsIgnoreCase(swPlanetName)) {
+            throw new BusinessException(PLANET_NAME_NOT_MATCHES);
+        }
     }
 
     private Planet buildAndSave(AddPlanetCommand command, String population) {
