@@ -1,0 +1,10 @@
+FROM openjdk:11
+
+ADD target/sw-api-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE ${PORT}
+
+CMD java \
+    -DSERVER_PORT=${SERVER_PORT} \
+    -DDATABASE_USERNAME=${DATABASE_USERNAME} \
+    -DDATABASE_PASSWORD=${DATABASE_PASSWORD} \
+-jar app.jar

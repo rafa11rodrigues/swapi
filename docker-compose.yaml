@@ -1,0 +1,37 @@
+version: "3"
+
+networks:
+  nt-test:
+    driver: bridge
+
+services:
+  db:
+    build:
+      context: "."
+      dockerfile: db.dockerfile
+    image: db-test
+    container_name: db
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+    networks:
+      - nt-test
+    ports:
+      - "3306:3306"
+
+  api:
+    build:
+      context: "."
+      dockerfile: api.dockerfile
+    image: api-test
+    container_name: api
+    environment:
+      - SERVER_PORT=${SERVER_PORT}
+      - DATABASE_HOST=db
+      - DATABASE_USERNAME=root
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+    networks:
+      - nt-test
+    ports:
+      - "${SERVER_PORT}:${SERVER_PORT}"
+    depends_on:
+      - db
